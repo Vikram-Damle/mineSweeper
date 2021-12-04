@@ -1,10 +1,10 @@
 name:                mineSweeper
 version:             0.1.0.0
-github:              "githubuser/mineSweeper"
+github:              "Vikram-Damle/mineSweeper"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2021 Author name here"
+author:              "Vikram Damle"
+# maintainer:          "example@example.com"
+copyright:           "2021 Vikram Damle"
 
 extra-source-files:
 - README.md
@@ -24,6 +24,8 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies: 
+  - array
 
 executables:
   mineSweeper-exe:
@@ -35,6 +37,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - mineSweeper
+    - random
+    - array
+
 
 tests:
   mineSweeper-test:

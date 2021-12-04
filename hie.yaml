@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "mineSweeper:lib"
+
+    - path: "./app/Main.hs"
+      component: "mineSweeper:exe:mineSweeper-exe"
+
+    - path: "./app/Paths_mineSweeper.hs"
+      component: "mineSweeper:exe:mineSweeper-exe"
+
+    - path: "./test"
+      component: "mineSweeper:test:mineSweeper-test"
