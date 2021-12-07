@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Generate
       Input
       Lib
       Logic
@@ -38,6 +39,7 @@ library
   build-depends:
       array
     , base >=4.7 && <5
+    , random
   default-language: Haskell2010
 
 executable mineSweeper-exe

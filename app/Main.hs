@@ -1,15 +1,29 @@
 module Main where
 
 
-import Data.Array.IArray
+-- import Data.Array.IArray
 
 import Lib
-import Utils
 
 
 main :: IO ()
 main = do
-    let world = listArray ((1,1), (h,w)) $ concat $ replicate (h*w) [celle, cellE, celle, cellm] :: Grid Cell
-    putStrLn $  worldToString world
-    return ()
+    seed <- randInt
+    let world = genWorld mineProb seed p
+    instructions p
+    run world
+
+
+run :: Grid Cell -> IO ()
+run currWorld = do
+    putStrLn . worldToString $ currWorld
+    p <- getCoords
+    let (newWorld, boom) = runMove currWorld p
+    if boom 
+        then do
+            putStrLn . worldToString $ newWorld
+            putStrLn $ "Game Over. Mine exploded at " ++ show p
+        else if winCondition newWorld
+            then putStrLn "You Win! All mines found"
+            else run newWorld
 

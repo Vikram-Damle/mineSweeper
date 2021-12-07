@@ -6,10 +6,12 @@ import Utils
 import Data.Array.IArray
 import Data.List (foldl')
 
-
+-- |Multi-query version of the ! operator
 getEntries :: (IArray a e, Ix i) => a i e -> [i] -> [e]
 getEntries = map . (!)
 
+
+-- |Get cell and coordinates of neighbours of a given cell
 getNeighbours :: Grid Cell -> Coords -> ([Cell], [Coords])
 getNeighbours world (h, w) = (getEntries world nbCrds, nbCrds)
     where
@@ -21,6 +23,7 @@ getNeighbours world (h, w) = (getEntries world nbCrds, nbCrds)
         nbCrds  = [(a, b) | a <- [top, h, bottom] , b <- [left, w, right], not ((a==h) && (b==w)), a > 0, b > 0]
 
 
+-- |Get number of mines adjacent to a cell (8-connected neighbours)
 mineCount :: Grid Cell -> Coords -> Int
 mineCount world (h, w) = foldl' mineCt 0 neighbours
     where
@@ -37,6 +40,7 @@ mineCount world (h, w) = foldl' mineCt 0 neighbours
             | otherwise         = 1 + acc
 
 
+-- |Update the state of a given cell (Unvisited -> Visited)
 updateCell :: Grid Cell -> Coords -> Grid Cell
 updateCell world p = world //  [(p, newCell)]
     where
@@ -44,6 +48,7 @@ updateCell world p = world //  [(p, newCell)]
         newCell = (Visited, oldContents)
 
 
+-- | Update the status of the world. Calls updateNeighbours if #Mines = 0
 updateWorld :: Grid Cell -> Coords -> Grid Cell
 updateWorld world p
     | state == Visited  = world
@@ -55,16 +60,32 @@ updateWorld world p
         (state, _) = world ! p
 
 
+-- |Update the states of neighbours of a given cell.
 updateNeighbours :: Grid Cell -> Coords -> Grid Cell
 updateNeighbours world p@(h, w) = updateNeighbours' world unbcoords
     where
         (neighbours, nbcoords) = getNeighbours world p
-        unbcoords = map snd $ filter (\c -> (fst .fst) c == Unvisited) (zip neighbours nbcoords)
+        -- validNeighbour :: (Cell, Coords) -> Bool
+
+        -- unbcoords = map snd $ filter (\c -> (fst .fst) c == Unvisited ) (zip neighbours nbcoords)
+        unbcoords = [coord | (nb, coord) <- zip neighbours nbcoords, fst nb == Unvisited]
         updateNeighbours' :: Grid Cell -> [Coords] -> Grid Cell
         updateNeighbours' = foldl' updateWorld
 
 
+-- |Adds mine count information to each cell
 cellToCountcell :: Grid Cell -> Grid CountCell
 cellToCountcell world = array (bounds world) newWorldList
     where
         newWorldList = [(p, (fst c, snd c, mineCount world p)) | (p, c) <- assocs world]
+
+
+runMove :: Grid Cell -> Coords -> (Grid Cell, Bool)
+runMove currWorld p = (newWorld, boom)
+    where
+        newWorld = updateWorld currWorld p
+        boom = newWorld ! p == (Visited, Mine)
+
+
+winCondition :: Grid Cell -> Bool
+winCondition world = (Unvisited, Empty) `notElem` elems world
