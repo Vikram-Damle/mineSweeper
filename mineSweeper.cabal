@@ -6,7 +6,7 @@ cabal-version: 1.12
 
 name:           mineSweeper
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/mineSweeper#readme>
+description:    Please see the README on GitHub at <https://github.com/Vikram-Damle/mineSweeper#readme>
 homepage:       https://github.com/Vikram-Damle/mineSweeper#readme
 bug-reports:    https://github.com/Vikram-Damle/mineSweeper/issues
 author:         Vikram Damle
@@ -17,7 +17,6 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
 
 source-repository head
   type: git
@@ -54,17 +53,4 @@ executable mineSweeper-exe
     , base >=4.7 && <5
     , mineSweeper
     , random
-  default-language: Haskell2010
-
-test-suite mineSweeper-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Paths_mineSweeper
-  hs-source-dirs:
-      test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , mineSweeper
   default-language: Haskell2010
